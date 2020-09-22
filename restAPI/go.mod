@@ -1,3 +1,3 @@
-module github.com/kaidev1024/gokai
+module github.com/kaidev1024/gokai/restAPI
 
 go 1.14

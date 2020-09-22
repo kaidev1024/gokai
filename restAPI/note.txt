@@ -1,0 +1,7 @@
+https://stackoverflow.com/questions/21095054/ssh-key-still-asking-for-password-and-passphrase
+handle github password:
+ssh-add ~/.ssh/id_rsa 
+ssh-add -K ~/.ssh/id_rsa
+
+go mod init github.com/kaidev1024/gokai/restAPI
+the path has to be main package
