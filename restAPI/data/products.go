@@ -1,12 +1,17 @@
 package data
 
-import "errors"
+import (
+	"errors"
+	"regexp"
+
+	"github.com/go-playground/validator/v10"
+)
 
 type Product struct {
-	ID    int
-	Name  string
-	SKU   string
-	Price float64
+	ID    int     `json:"id"`
+	Name  string  `json:"name" validate:"required"`
+	SKU   string  `json:"sku" validate:"sku"`
+	Price float64 `json:"price" validate:"gt=0"`
 }
 
 var errProductNotFound = errors.New("Product not found")
@@ -26,45 +31,18 @@ var allProducts = []*Product{
 	},
 }
 
-func GetAllProducts() []*Product {
-	return allProducts
+func (p *Product) Validate() error {
+	validate := validator.New()
+	validate.RegisterValidation("sku", validateSKU)
+
+	return validate.Struct(p)
 }
 
-func GetProductByID(id int) (*Product, error) {
-	pos := findProductByID(id)
-	if pos == -1 {
-		return nil, errProductNotFound
-	}
-	return allProducts[pos], nil
-}
+func validateSKU(fl validator.FieldLevel) bool {
+	reg := regexp.MustCompile(`[a-z]+-[a-z]+-[a-z]`)
+	matchedStrings := reg.FindAllString(fl.Field().String(), -1)
 
-func AddProduct(p *Product) {
-	nProducts := len(allProducts)
-	lastID := allProducts[nProducts-1].ID
-	p.ID = lastID + 1
-	allProducts = append(allProducts, p)
-}
-
-func DeleteProductByID(id int) error {
-	pos := findProductByID(id)
-	if pos == -1 {
-		return errProductNotFound
-	}
-
-	allProducts = append(allProducts[:pos], allProducts[pos+1:]...)
-	return nil
-}
-
-func UpdateProductByID(id int, p *Product) error {
-	pos := findProductByID(id)
-	if pos == -1 {
-		return errProductNotFound
-	}
-
-	p.ID = id
-
-	allProducts[pos] = p
-	return nil
+	return len(matchedStrings) == 1
 }
 
 func findProductByID(id int) int {
