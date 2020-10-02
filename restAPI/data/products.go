@@ -11,7 +11,7 @@ type Product struct {
 	ID    int     `json:"id"`
 	Name  string  `json:"name" validate:"required"`
 	SKU   string  `json:"sku" validate:"sku"`
-	Price float64 `json:"price" validate:"gt=0"`
+	Price float32 `json:"price" validate:"gt=0"`
 }
 
 var errProductNotFound = errors.New("Product not found")

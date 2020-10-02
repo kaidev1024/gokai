@@ -9,13 +9,20 @@ import (
 	"time"
 
 	"github.com/kaidev1024/gokai/restAPI/handlers"
+	protos "github.com/kaidev1024/protobuf/protos/currency"
+	"google.golang.org/grpc"
 )
 
 func main() {
 	mainLog := log.New(os.Stdout, "REST:", log.LstdFlags)
 	mainLog.Println("main function starts here.....")
 
-	ph := handlers.NewProductHandler(mainLog)
+	conn, _ := grpc.Dial("localhost:9092")
+	defer conn.Close()
+
+	cc := protos.NewCurrencyClient(conn)
+
+	ph := handlers.NewProductHandler(mainLog, cc)
 
 	serverMux := http.NewServeMux()
 	serverMux.Handle("/", ph)
