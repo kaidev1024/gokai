@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/kaidev1024/gokai/zinx/utils"
 	"github.com/kaidev1024/gokai/zinx/ziface"
 )
 
@@ -32,7 +33,7 @@ func (c *Connection) StartReader() {
 	defer c.Stop()
 
 	for {
-		buf := make([]byte, 512)
+		buf := make([]byte, utils.GlobalObject.MaxPackageSize)
 		cnt, err := c.Conn.Read(buf)
 		if err != nil {
 			fmt.Println("received buf err", err)
