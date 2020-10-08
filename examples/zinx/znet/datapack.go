@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"fmt"
 
 	"github.com/kaidev1024/gokai/zinx/utils"
 	"github.com/kaidev1024/gokai/zinx/ziface"
@@ -38,6 +39,7 @@ func (dp *DataPack) Pack(msg ziface.IMessage) ([]byte, error) {
 }
 
 func (dp *DataPack) Unpack(binaryData []byte) (ziface.IMessage, error) {
+	fmt.Println("unpack called", string(binaryData))
 	dataBuff := bytes.NewReader(binaryData)
 
 	msg := &Message{}
@@ -57,6 +59,6 @@ func (dp *DataPack) Unpack(binaryData []byte) (ziface.IMessage, error) {
 	if utils.GlobalObject.MaxPackageSize > 0 && msg.DataLen > utils.GlobalObject.MaxPackageSize {
 		return nil, errors.New("too large msg data recv!")
 	}
-
-	return msg
+	fmt.Printf("msg %+v\n", msg)
+	return msg, nil
 }
