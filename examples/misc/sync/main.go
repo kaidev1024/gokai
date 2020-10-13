@@ -33,3 +33,16 @@ func main() {
 	}
 	wg.Wait()
 }
+
+func main1() {
+	done := make(chan bool)
+	for i := 0; i < 5; i++ {
+		go func(i) {
+			println(i)
+			done <- true
+		}(i)
+	}
+	for i := 0; i < 5; i++ {
+		<-done
+	}
+}
